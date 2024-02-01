@@ -1,34 +1,106 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<title>Circle Counter</title>
-<style>
-/* Same CSS styles as before */
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Counter</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f5f5f5;
+        }
+
+        .counter-display {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            background-color: #4CAF50;
+            color: #fff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 36px;
+            font-weight: bold;
+        }
+
+        .button {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            border: none;
+            cursor: pointer;
+            margin: 20px;
+        }
+
+        .increment-button {
+            background-color: #2196F3;
+        }
+
+        .decrement-button {
+            background-color: #FF5722;
+        }
+    </style>
 </head>
 <body>
+    <div class="counter-display">0</div>
+    <button class="button increment-button"></button>
+    <button class="button decrement-button"></button>
+    <script>
+        const counterDisplay = document.querySelector('.counter-display');
+        let count = 0;
 
-<div class="counter-container" draggable="true">
-  </div>
+        counterDisplay.textContent = count;
 
-<script>
-/* Same JavaScript code for count functionality as before */
+        const incrementButton = document.querySelector('.increment-button');
+        incrementButton.addEventListener('click', () => {
+            count++;
+            counterDisplay.textContent = count;
+        });
 
-const counterContainer = document.querySelector(".counter-container");
+        const decrementButton = document.querySelector('.decrement-button');
+        decrementButton.addEventListener('mousedown', () => {
+            let timeout;
+            timeout = setTimeout(() => {
+                count = 0;
+                counterDisplay.textContent = count;
+            }, 1000); // Reset after 1 second of holding
 
-counterContainer.addEventListener("dragstart", function(event) {
-  event.dataTransfer.setData("text/plain", "");
-});
+            decrementButton.addEventListener('mouseup', () => {
+                clearTimeout(timeout);
+                count--;
+                counterDisplay.textContent = count;
+            });
+        });
+		
+        incrementButton.addEventListener('touchstart', () => {
+            const interval = setInterval(() => {
+                count++;
+                counterDisplay.textContent = count;
+            }, 100); // Increment every 100 ms on touch
 
-counterContainer.addEventListener("dragover", function(event) {
-  event.preventDefault();
-});
+            incrementButton.addEventListener('touchend', () => {
+                clearTimeout(interval);
+            });
+        });
 
-counterContainer.addEventListener("drop", function(event) {
-  event.preventDefault();
-  const scaleFactor = event.clientY / window.innerHeight; // Adjust based on drop position
-  counterContainer.style.transform = `scale(${scaleFactor})`;
-});
-</script>
+        decrementButton.addEventListener('touchstart', () => {
+            const interval = setInterval(() => {
+                if (count > 0) {
+                    count--;
+                    counterDisplay.textContent = count;
+                }
+            }, 100); // Decrement every 100 ms on touch
+
+            decrementButton.addEventListener('touchend', () => {
+                clearTimeout(interval);
+            });
+        });
+
+    </script>
 </body>
 </html>
